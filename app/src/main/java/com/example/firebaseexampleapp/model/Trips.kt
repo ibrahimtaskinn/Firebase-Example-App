@@ -1,4 +1,4 @@
-package com.example.firebaseexampleapp
+package com.example.firebaseexampleapp.model
 
 data class Trips(
     val tripId : String = "",

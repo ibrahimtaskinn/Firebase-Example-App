@@ -1,10 +1,12 @@
-package com.example.firebaseexampleapp
+package com.example.firebaseexampleapp.adapter
 
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.firebaseexampleapp.model.Trips
+import com.example.firebaseexampleapp.activity.UpdateTripActivity
 import com.example.firebaseexampleapp.databinding.TripsItemBinding
 
 class TripsAdapter(var context : Context,

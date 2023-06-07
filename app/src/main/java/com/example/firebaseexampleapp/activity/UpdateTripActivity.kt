@@ -1,4 +1,4 @@
-package com.example.firebaseexampleapp
+package com.example.firebaseexampleapp.activity
 
 import android.os.Bundle
 import android.widget.Toast

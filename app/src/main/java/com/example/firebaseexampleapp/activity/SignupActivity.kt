@@ -1,4 +1,4 @@
-package com.example.firebaseexampleapp
+package com.example.firebaseexampleapp.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

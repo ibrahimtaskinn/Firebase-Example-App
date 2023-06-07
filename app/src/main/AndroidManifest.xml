@@ -15,14 +15,14 @@
         android:theme="@style/Theme.FireBaseExampleApp"
         tools:targetApi="31">
         <activity
-            android:name=".ForgetActivity"
+            android:name=".activity.ForgetActivity"
             android:exported="false" />
         <activity
-            android:name=".SignupActivity"
+            android:name=".activity.SignupActivity"
             android:exported="false"
-            android:parentActivityName=".LoginActivity" />
+            android:parentActivityName=".activity.LoginActivity" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activity.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,13 +31,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UpdateTripActivity"
+            android:name=".activity.UpdateTripActivity"
             android:exported="false" />
         <activity
-            android:name=".AddTripActivity"
+            android:name=".activity.AddTripActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="true" />
     </application>
 
