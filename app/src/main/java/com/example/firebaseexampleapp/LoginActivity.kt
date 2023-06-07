@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import com.example.firebaseexampleapp.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 
 class LoginActivity : AppCompatActivity() {
 
@@ -46,6 +47,11 @@ class LoginActivity : AppCompatActivity() {
 
     fun signinWithFirebase(userEmail : String, userPassWord : String) {
 
+        if(userEmail.isEmpty() || userPassWord.isEmpty()){
+            Toast.makeText(applicationContext, "Email and Password must not be empty", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         auth.signInWithEmailAndPassword(userEmail, userPassWord)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
@@ -55,7 +61,13 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(intent)
                     finish()
                 } else {
-                    Toast.makeText(applicationContext, task.exception?.toString(), Toast.LENGTH_SHORT).show()
+                    try {
+                        throw task.exception!!
+                    } catch(e: FirebaseAuthInvalidCredentialsException) {
+                        Toast.makeText(applicationContext, "Invalid email or password", Toast.LENGTH_SHORT).show()
+                    } catch(e: Exception) {
+                        Toast.makeText(applicationContext, "An error occurred: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
     }

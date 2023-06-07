@@ -17,7 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/forgettoolbar" />
 
     <Button
         android:id="@+id/buttonReset"
@@ -25,8 +25,21 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         android:text="Reset my password"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/red"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextReset" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/forgettoolbar"
+        android:layout_width="409dp"
+        android:layout_height="wrap_content"
+        android:background="@color/blue"
+        app:titleTextColor="@color/white"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        tools:layout_editor_absoluteX="1dp"
+        tools:ignore="MissingConstraints" />
 </androidx.constraintlayout.widget.ConstraintLayout>

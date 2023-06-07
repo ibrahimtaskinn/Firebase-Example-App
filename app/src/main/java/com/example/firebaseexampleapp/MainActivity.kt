@@ -4,11 +4,10 @@ import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -16,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.firebaseexampleapp.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -28,10 +26,12 @@ class MainActivity : AppCompatActivity() {
     lateinit var mainBinding: ActivityMainBinding
 
     val database : FirebaseDatabase = FirebaseDatabase.getInstance()
-    val myReference : DatabaseReference = database.reference.child("MyUsers")
+    var myReference : DatabaseReference = database.reference.child("MyUsers")
 
-    val userList = ArrayList<Users>()
-    lateinit var usersAdapter: UsersAdapter
+    private lateinit var dataListener: ValueEventListener
+
+    val tripList = ArrayList<Trips>()
+    lateinit var tripsAdapter: TripsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,12 +40,17 @@ class MainActivity : AppCompatActivity() {
         val view = mainBinding.root
         setContentView(view)
 
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        if (currentUserId != null) {
+            myReference = database.reference.child("MyUsers").child(currentUserId)
+        }
+
         setSupportActionBar(mainBinding.Hometoolbar)
         supportActionBar?.title = "Home"
 
         mainBinding.floatingActionButton.setOnClickListener {
 
-            val intent = Intent(this, AddUserActivity::class.java)
+            val intent = Intent(this, AddTripActivity::class.java)
             startActivity(intent)
         }
 
@@ -60,11 +65,11 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val id = usersAdapter.getUserId(viewHolder.adapterPosition)
+                val id = tripsAdapter.getUserId(viewHolder.adapterPosition)
 
                 myReference.child(id).removeValue()
 
-                Toast.makeText(applicationContext, "The user was deleted", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "The trip was deleted", Toast.LENGTH_SHORT).show()
             }
 
         }).attachToRecyclerView(mainBinding.recyclerView)
@@ -73,39 +78,24 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun retrieveDataFromDatabase(){
-
-        myReference.addValueEventListener(object : ValueEventListener{
+    private fun retrieveDataFromDatabase() {
+        dataListener = myReference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-
-                userList.clear()
-
-                for (eachUser in snapshot.children){
-
-                    val user = eachUser.getValue(Users::class.java)
-
+                tripList.clear()
+                for (eachUser in snapshot.children) {
+                    val user = eachUser.getValue(Trips::class.java)
                     if (user != null) {
-
-                        println("userId: ${user.userId}")
-                        println("userName: ${user.userName}")
-                        println("userAge: ${user.userAge}")
-                        println("userEmail: ${user.userEmail}")
-                        println("******************************")
-
-                        userList.add(user)
+                        tripList.add(user)
                     }
-                    usersAdapter = UsersAdapter(this@MainActivity, userList)
-
-                    mainBinding.recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
-
-                    mainBinding.recyclerView.adapter = usersAdapter
                 }
+                tripsAdapter = TripsAdapter(this@MainActivity, tripList)
+                mainBinding.recyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
+                mainBinding.recyclerView.adapter = tripsAdapter
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                Toast.makeText(applicationContext, error.message, Toast.LENGTH_SHORT).show()
             }
-
         })
     }
 
@@ -116,10 +106,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        if (item.itemId == R.id.deleteAll){
+        if (item.itemId == R.id.deleteAll) {
             showDialogMessage()
-        }else if (item.itemId == R.id.signOut){
+        } else if (item.itemId == R.id.signOut) {
+            myReference.removeEventListener(dataListener)
             FirebaseAuth.getInstance().signOut()
             val intent = Intent(this@MainActivity, LoginActivity::class.java)
             startActivity(intent)
@@ -131,9 +121,9 @@ class MainActivity : AppCompatActivity() {
     fun showDialogMessage(){
 
         val dialogMessage = AlertDialog.Builder(this)
-        dialogMessage.setTitle("Delete All Users")
-        dialogMessage.setMessage("İf click Yes, all users will be deleted," +
-            "If you want to delete a specific user, you can swipe the item you want to delete right or left")
+        dialogMessage.setTitle("Delete All Trips")
+        dialogMessage.setMessage("İf click Yes, all trips will be deleted," +
+            "If you want to delete a specific trip, you can swipe the item you want to delete right or left")
         dialogMessage.setNegativeButton("Cancel", DialogInterface.OnClickListener { dialogInterface, i ->
             dialogInterface.cancel()
         })
@@ -142,9 +132,9 @@ class MainActivity : AppCompatActivity() {
             myReference.removeValue().addOnCompleteListener { task ->
 
                 if (task.isSuccessful){
-                    usersAdapter.notifyDataSetChanged()
+                    tripsAdapter.notifyDataSetChanged()
 
-                    Toast.makeText(applicationContext, "All users were deleted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, "All trips were deleted", Toast.LENGTH_SHORT).show()
                 }
             }
         })

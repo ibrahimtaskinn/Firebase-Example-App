@@ -31,10 +31,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UpdateUserActivity"
+            android:name=".UpdateTripActivity"
             android:exported="false" />
         <activity
-            android:name=".AddUserActivity"
+            android:name=".AddTripActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

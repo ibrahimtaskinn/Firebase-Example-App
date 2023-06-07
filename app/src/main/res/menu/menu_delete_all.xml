@@ -5,7 +5,7 @@
     <item
         android:id="@+id/deleteAll"
         android:icon="@drawable/delete_icon"
-        android:title="Delete All Users" />
+        android:title="Delete All Trips" />
     <item
         android:id="@+id/signOut"
         android:title="Sign Out" />

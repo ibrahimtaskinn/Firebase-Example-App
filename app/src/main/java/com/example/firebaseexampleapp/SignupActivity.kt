@@ -1,10 +1,12 @@
 package com.example.firebaseexampleapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.example.firebaseexampleapp.databinding.ActivitySignupBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 
 class SignupActivity : AppCompatActivity() {
 
@@ -32,15 +34,39 @@ class SignupActivity : AppCompatActivity() {
 
     fun signupWithFirebase(userEmail : String, userPassword : String){
 
+        if(userEmail.isEmpty() || userPassword.isEmpty()){
+            Toast.makeText(applicationContext, "Email and Password must not be empty", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if(userPassword.length < 6){
+            Toast.makeText(applicationContext, "Password must be at least 6 characters long", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
+            Toast.makeText(applicationContext, "Please enter a valid email address", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         auth.createUserWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener { task ->
 
             if (task.isSuccessful){
-
                 Toast.makeText(applicationContext, "Your account has been created", Toast.LENGTH_SHORT).show()
 
-            }else {
+                FirebaseAuth.getInstance().signOut()
 
-                Toast.makeText(applicationContext, task.exception?.toString(), Toast.LENGTH_SHORT).show()
+                val intent = Intent(this@SignupActivity, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+            }else {
+                try {
+                    throw task.exception!!
+                } catch(e: FirebaseAuthUserCollisionException) {
+                    Toast.makeText(applicationContext, "This email is already registered", Toast.LENGTH_SHORT).show()
+                } catch(e: Exception) {
+                    Toast.makeText(applicationContext, "An error occurred: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
