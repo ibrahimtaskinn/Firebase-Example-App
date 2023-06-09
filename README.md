@@ -2,6 +2,10 @@
 
 The project I have written is designed as a Firebase exercise and includes a simple layout. Within the application, users can register and add, update, and delete the places they want to visit to their own Firebase databases. User registration and login processes are controlled with Firebase authentication. User data operations are controlled with Firebase Realtime Database.
 
+## Project Features
+- Firebase Authentication
+- Firebase Realtimedatabase
+- ViewBinding
 
 <table>
   <tr>
@@ -18,5 +22,3 @@ The project I have written is designed as a Firebase exercise and includes a sim
 </table>
 
 https://github.com/ibrahimtaskinn/firebaseexampleapp/assets/101405883/12740a0d-7f77-4e91-9838-cd89e52428f4
-
-
