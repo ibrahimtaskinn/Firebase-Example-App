@@ -34,8 +34,8 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/forgettoolbar"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
         android:background="@color/blue"
         app:titleTextColor="@color/white"
         android:minHeight="?attr/actionBarSize"

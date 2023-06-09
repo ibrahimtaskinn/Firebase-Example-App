@@ -66,8 +66,8 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/addusertoolbar"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
         android:background="@color/blue"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"

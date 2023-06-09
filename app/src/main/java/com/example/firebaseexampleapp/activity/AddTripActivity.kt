@@ -14,6 +14,8 @@ class AddTripActivity : AppCompatActivity() {
     private lateinit var myReference: DatabaseReference
     private val database = FirebaseDatabase.getInstance()
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         addTripBinding = ActivityAddTripBinding.inflate(layoutInflater)
@@ -29,7 +31,8 @@ class AddTripActivity : AppCompatActivity() {
         }
 
         addTripBinding.buttonAddUser.setOnClickListener {
-            addUserToDatabase()
+            it.isClickable = false
+                addUserToDatabase()
         }
     }
 
@@ -37,6 +40,16 @@ class AddTripActivity : AppCompatActivity() {
         val title: String = addTripBinding.editTextTitle.text.toString()
         val city: String = addTripBinding.editTextCity.text.toString()
         val notes: String = addTripBinding.editTextNotes.text.toString()
+
+        if (title.isEmpty() || city.isEmpty() || notes.isEmpty()) {
+            Toast.makeText(
+                applicationContext,
+                "Please fill all the fields",
+                Toast.LENGTH_SHORT
+            ).show()
+            addTripBinding.buttonAddUser.isClickable = true  // Make the button clickable again
+            return
+        }
 
         val id: String = myReference.push().key.toString()
 
@@ -58,5 +71,6 @@ class AddTripActivity : AppCompatActivity() {
                 ).show()
             }
         }
+        finish()
     }
 }
